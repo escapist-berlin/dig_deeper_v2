@@ -10,9 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_20_122256) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_20_165552) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "releases", force: :cascade do |t|
+    t.string "artist"
+    t.string "title"
+    t.string "label"
+    t.string "catalog_number"
+    t.string "format"
+    t.date "released"
+    t.string "styles"
+    t.string "url"
+    t.string "cover_url"
+    t.string "source"
+    t.string "tag"
+    t.string "comment"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_releases_on_user_id"
+  end
+
+  create_table "tracks", force: :cascade do |t|
+    t.string "title"
+    t.boolean "favorite"
+    t.string "position"
+    t.bigint "release_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["release_id"], name: "index_tracks_on_release_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,4 +55,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_20_122256) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "releases", "users"
+  add_foreign_key "tracks", "releases"
 end
